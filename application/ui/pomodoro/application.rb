@@ -56,6 +56,10 @@ module Pomodoro
         start_timer
       end
 
+      pause_button = Gtk::Button.new :label => "Pause"
+      pause_button.signal_connect "clicked" do 
+        @pause = false
+      end
 
       project_selector = Gtk::ComboBoxText.new
       @counter = Gtk::Label.new '25:00'
@@ -87,21 +91,15 @@ module Pomodoro
       attach entry, 0, 0, 1, 1
       attach project_selector, 1, 0, 1, 1
       attach start_button, 2, 0, 1, 1
-      attach @counter, 0, 1, 3, 1
-      attach work_done, 0, 2, 3, 1
+      attach pause_button, 3, 0, 1, 1
+      attach @counter, 0, 1, 4, 1
+      attach work_done, 0, 2, 4, 1
     end
 
     def start_timer
       @total_seconds = 25 * 60
       puts(@total_seconds.to_s)
       @timeout_id = GLib::Timeout.add_seconds(1) { update_counter }
-      #25*60.downto(0) do |seconds|
-      #  minutes = (25 * 60 - seconds) / 60
-      #  seconds = 60 - (25 * 60 - seconds) % 60
-      #  puts minutes.to_s + ":" + seconds.to_s 
-      #  @counter.set_label minutes.to_s + ":" + seconds.to_s 
-      #  sleep 1
-      #end
     end
 
     def update_counter
