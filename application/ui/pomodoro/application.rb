@@ -52,8 +52,13 @@ module Pomodoro
       entry = Gtk::Entry.new
       entry.set_width_chars 100
       start_button = Gtk::Button.new :label => "Start"
+      start_button.signal_connect "clicked" do 
+        start_timer
+      end
+
+
       project_selector = Gtk::ComboBoxText.new
-      counter = Gtk::Label.new '25:00'
+      @counter = Gtk::Label.new '25:00'
 
       project_selector.append_text 'Project 1'
       project_selector.append_text 'Project 2'
@@ -82,8 +87,36 @@ module Pomodoro
       attach entry, 0, 0, 1, 1
       attach project_selector, 1, 0, 1, 1
       attach start_button, 2, 0, 1, 1
-      attach counter, 0, 1, 3, 1
+      attach @counter, 0, 1, 3, 1
       attach work_done, 0, 2, 3, 1
+    end
+
+    def start_timer
+      @total_seconds = 25 * 60
+      puts(@total_seconds.to_s)
+      @timeout_id = GLib::Timeout.add_seconds(1) { update_counter }
+      #25*60.downto(0) do |seconds|
+      #  minutes = (25 * 60 - seconds) / 60
+      #  seconds = 60 - (25 * 60 - seconds) % 60
+      #  puts minutes.to_s + ":" + seconds.to_s 
+      #  @counter.set_label minutes.to_s + ":" + seconds.to_s 
+      #  sleep 1
+      #end
+    end
+
+    def update_counter
+      #puts(@total_seconds.to_s)
+      if @total_seconds > 0
+        @total_seconds = @total_seconds - 1
+        minutes = 24 - (25 * 60 - @total_seconds) / 60
+        seconds = 59 - (25 * 60 - @total_seconds) % 60
+        @counter.set_label '%02d:%02d' % [minutes, seconds] 
+        @timeout_id = GLib::Timeout.add(1000000) { update_counter }
+        return true
+      else
+        #puts("done")
+        return false
+      end
     end
 
   end
