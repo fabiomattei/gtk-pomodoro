@@ -32,6 +32,14 @@ module Pomodoro
       end
       add quit_button
 
+      # Adding log
+      log_button = Gtk::Button.new :label => "Activities Log"
+      add log_button
+
+      # Adding settings
+      settings_button = Gtk::Button.new :label => "Settings"
+      add settings_button
+
     end
 
   end
