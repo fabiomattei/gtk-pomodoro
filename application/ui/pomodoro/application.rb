@@ -10,26 +10,40 @@ module Pomodoro
         window.set_title 'GTK Pomodoro'
         window.set_default_size 500, 400
         
-        window.set_titlebar init_header_bar
-        window.add init_ui
+        window.set_titlebar MyHeaderBar.new self
+        window.add MyGrid.new
 
         window.show_all
       end
     end
 
-    def init_header_bar
-      header_bar = Gtk::HeaderBar.new
+    def init_ui
+       
+      return grid
+    end
+
+  end
+
+  class MyHeaderBar < Gtk::HeaderBar
+
+    def initialize(application)
+      super()
+
+      # Adding quit button
       quit_button = Gtk::Button.new :label => "Quit"
       quit_button.signal_connect "clicked" do 
-          quit
+          application.quit
       end
-      header_bar.add quit_button
-      return header_bar
-    end 
+      add quit_button
 
-    def init_ui
-      #initializing grid layout
-      grid = Gtk::Grid.new
+    end
+
+  end
+
+  class MyGrid < Gtk::Grid
+
+    def initialize
+      super()
 
       entry = Gtk::Entry.new
       entry.set_width_chars 100
@@ -61,14 +75,11 @@ module Pomodoro
       column.resizable = true
       work_done.append_column(column)
       
-      grid.attach entry, 0, 0, 1, 1
-      grid.attach project_selector, 1, 0, 1, 1
-      grid.attach start_button, 2, 0, 1, 1
-      grid.attach counter, 0, 1, 3, 1
-      grid.attach work_done, 0, 2, 3, 1
-
-      # adding grid layout to current window 
-      return grid
+      attach entry, 0, 0, 1, 1
+      attach project_selector, 1, 0, 1, 1
+      attach start_button, 2, 0, 1, 1
+      attach counter, 0, 1, 3, 1
+      attach work_done, 0, 2, 3, 1
     end
 
   end
