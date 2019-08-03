@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'gtk3'
+
+app = Gtk::Application.new 'net.funambolo.gtk-pomodoro', :flags_none
+
+app.signal_connect :activate do |application|
+  window = Gtk::ApplicationWindow.new(application)
+  window.set_title 'GTK Pomodoro'
+  window.present
+end
+
+puts app.run
