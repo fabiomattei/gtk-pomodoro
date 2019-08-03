@@ -24,13 +24,37 @@ module Pomodoro
       entry.set_width_chars 100
       start_button = Gtk::Button.new :label => "Start"
       project_selector = Gtk::ComboBoxText.new
+      counter = Gtk::Label.new '25:00'
 
       project_selector.append_text 'Project 1'
       project_selector.append_text 'Project 2'
+
+      list_store = Gtk::ListStore.new(String, String, String)
+      iter = list_store.append
+      iter[0] = "My first task"
+      iter[1] = "Pomodoro GTK"
+      iter[2] = "25:00"
+
+      work_done = Gtk::TreeView.new(list_store)
+      renderer = Gtk::CellRendererText.new
+
+      column = Gtk::TreeViewColumn.new("Task", renderer, :text => 0)
+      column.resizable = true
+      work_done.append_column(column)
+
+      column = Gtk::TreeViewColumn.new("Project", renderer, :text => 1)
+      column.resizable = true
+      work_done.append_column(column)
+
+      column = Gtk::TreeViewColumn.new("Time", renderer, :text => 2)
+      column.resizable = true
+      work_done.append_column(column)
       
       grid.attach entry, 0, 0, 1, 1
       grid.attach project_selector, 1, 0, 1, 1
       grid.attach start_button, 2, 0, 1, 1
+      grid.attach counter, 0, 1, 3, 1
+      grid.attach work_done, 0, 2, 3, 1
 
       # adding grid layout to current window 
       return grid
