@@ -70,9 +70,13 @@ module Pomodoro
       project_selector.append_text 'Project 2'
 
       list_store = Gtk::ListStore.new(String, String, String)
-      iter = list_store.append
+      iter = list_store.append 
       iter[0] = "My first task"
       iter[1] = "Pomodoro GTK"
+      iter[2] = "25"
+      iter = list_store.append 
+      iter[0] = "sssss first task"
+      iter[1] = "ccc Pomodoro GTK"
       iter[2] = "25"
 
       work_done = Gtk::TreeView.new(list_store)
