@@ -49,6 +49,8 @@ module Pomodoro
     def initialize
       super()
 
+      @pause = false
+
       entry = Gtk::Entry.new
       entry.set_width_chars 100
       start_button = Gtk::Button.new :label => "Start"
@@ -56,9 +58,9 @@ module Pomodoro
         start_timer
       end
 
-      pause_button = Gtk::Button.new :label => "Pause"
-      pause_button.signal_connect "clicked" do 
-        @pause = false
+      @pause_button = Gtk::Button.new :label => "Pause"
+      @pause_button.signal_connect "clicked" do 
+        pause_button_pushed
       end
 
       project_selector = Gtk::ComboBoxText.new
@@ -91,30 +93,45 @@ module Pomodoro
       attach entry, 0, 0, 1, 1
       attach project_selector, 1, 0, 1, 1
       attach start_button, 2, 0, 1, 1
-      attach pause_button, 3, 0, 1, 1
+      attach @pause_button, 3, 0, 1, 1
       attach @counter, 0, 1, 4, 1
       attach work_done, 0, 2, 4, 1
     end
 
+    def pause_button_pushed
+      @pause = !@pause
+      if @pause
+        @pause_button.set_label "Resume"
+      else
+        @pause_button.set_label "Pause"
+        resume_timer
+      end
+    end
+
     def start_timer
       @total_seconds = 25 * 60
-      puts(@total_seconds.to_s)
+      @timeout_id = GLib::Timeout.add_seconds(1) { update_counter }
+    end
+
+    def resume_timer
       @timeout_id = GLib::Timeout.add_seconds(1) { update_counter }
     end
 
     def update_counter
       #puts(@total_seconds.to_s)
-      if @total_seconds > 0
-        @total_seconds = @total_seconds - 1
-        minutes = 24 - (25 * 60 - @total_seconds) / 60
-        seconds = 59 - (25 * 60 - @total_seconds) % 60
-        @counter.set_label '%02d:%02d' % [minutes, seconds] 
-        @timeout_id = GLib::Timeout.add(1000000) { update_counter }
-        return true
-      else
-        #puts("done")
-        return false
+      if !@pause
+        if @total_seconds > 0
+          @total_seconds = @total_seconds - 1
+          minutes = 24 - (25 * 60 - @total_seconds) / 60
+          seconds = 59 - (25 * 60 - @total_seconds) % 60
+          @counter.set_label '%02d:%02d' % [minutes, seconds] 
+          @timeout_id = GLib::Timeout.add(1000000) { update_counter }
+          return true
+        else
+          return false
+        end
       end
+      return false
     end
 
   end
