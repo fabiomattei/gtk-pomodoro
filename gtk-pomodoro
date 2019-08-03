@@ -2,12 +2,10 @@
 
 require 'gtk3'
 
-app = Gtk::Application.new 'net.funambolo.gtk-pomodoro', :flags_none
+# Require all ruby files in the application folder recursively
+application_root_path = File.expand_path(__dir__)
+Dir[File.join(application_root_path, '**', '*.rb')].each { |file| require file }
 
-app.signal_connect :activate do |application|
-  window = Gtk::ApplicationWindow.new(application)
-  window.set_title 'GTK Pomodoro'
-  window.present
-end
+app = Pomodoro::Application.new
 
 puts app.run
