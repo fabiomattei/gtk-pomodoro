@@ -10,6 +10,15 @@ module Pomodoro
         window.set_title 'GTK Pomodoro'
         window.set_default_size 500, 400
 
+        header_bar = Gtk::HeaderBar.new
+        quit_button = Gtk::Button.new :label => "Quit"
+        quit_button.signal_connect "clicked" do 
+            quit
+        end
+        header_bar.add quit_button
+        window.set_titlebar header_bar
+        #puts(window.methods)
+
         window.add init_ui
 
         window.show_all
