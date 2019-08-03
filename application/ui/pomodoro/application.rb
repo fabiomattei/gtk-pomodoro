@@ -15,7 +15,7 @@ module Pomodoro
 
         window.show_all
       end
-      
+
     end
 
   end
@@ -54,7 +54,7 @@ module Pomodoro
       iter = list_store.append
       iter[0] = "My first task"
       iter[1] = "Pomodoro GTK"
-      iter[2] = "25:00"
+      iter[2] = "25"
 
       work_done = Gtk::TreeView.new(list_store)
       renderer = Gtk::CellRendererText.new
@@ -67,7 +67,7 @@ module Pomodoro
       column.resizable = true
       work_done.append_column(column)
 
-      column = Gtk::TreeViewColumn.new("Time", renderer, :text => 2)
+      column = Gtk::TreeViewColumn.new("Time (Min)", renderer, :text => 2)
       column.resizable = true
       work_done.append_column(column)
       
