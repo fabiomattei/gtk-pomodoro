@@ -15,11 +15,7 @@ module Pomodoro
 
         window.show_all
       end
-    end
-
-    def init_ui
-       
-      return grid
+      
     end
 
   end
