@@ -6,15 +6,14 @@ module Pomodoro
     def initialize
       super 'net.funambolo.gtk-pomodoro', Gio::ApplicationFlags::FLAGS_NONE
 
-      @user_data_path = File.expand_path('~/.gtk-pomodoro')
-      unless File.directory?(@user_data_path)
-        puts "First run. Creating user's application path: #{@user_data_path}"
-        FileUtils.mkdir_p(@user_data_path)
-      end
+      #@user_data_path = File.expand_path('~/.gtk-pomodoro')
+      #unless File.directory?(@user_data_path)
+      #  puts "First run. Creating user's application path: #{@user_data_path}"
+      #  FileUtils.mkdir_p(@user_data_path)
+      #end
 
       signal_connect :activate do |application|
         window = Gtk::ApplicationWindow.new(application)
-        window.set_title 'GTK Pomodoro'
         window.set_default_size 500, 400
         
         window.set_titlebar MyHeaderBar.new self
@@ -32,12 +31,12 @@ module Pomodoro
     def initialize(application)
       super()
 
-      # Adding quit button
-      quit_button = Gtk::Button.new :label => "Quit"
-      quit_button.signal_connect "clicked" do 
-          application.quit
-      end
-      add quit_button
+      # set title for HeaderBar, when I set a HeaderBar the window title desappears
+      set_title 'GTK Pomodoro'
+
+      # shows all buttons for windows resizing and for shutting down the application
+      # and not only the close button
+      set_show_close_button true
 
       # Adding log
       log_button = Gtk::Button.new :label => "Activities Log"
