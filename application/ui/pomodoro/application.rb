@@ -39,11 +39,11 @@ module Pomodoro
       set_show_close_button true
 
       # Adding log
-      log_button = Gtk::Button.new :label => "Activities Log"
+      log_button = Gtk::Button.new :icon_name => "preferences-system"
       add log_button
 
       # Adding settings
-      settings_button = Gtk::Button.new :label => "Settings"
+      settings_button = Gtk::Button.new :icon_name => "edit-find"
       add settings_button
 
     end
@@ -68,6 +68,8 @@ module Pomodoro
       @pause_button.signal_connect "clicked" do 
         pause_button_pushed
       end
+
+      end_button = Gtk::Button.new :label => "End"
 
       project_selector = Gtk::ComboBoxText.new
       @counter = Gtk::Label.new '25:00'
@@ -104,8 +106,9 @@ module Pomodoro
       attach project_selector, 1, 0, 1, 1
       attach start_button, 2, 0, 1, 1
       attach @pause_button, 3, 0, 1, 1
-      attach @counter, 0, 1, 4, 1
-      attach work_done, 0, 2, 4, 1
+      attach end_button, 4, 0, 1, 1
+      attach @counter, 0, 1, 5, 1
+      attach work_done, 0, 2, 5, 1
     end
 
     def pause_button_pushed
