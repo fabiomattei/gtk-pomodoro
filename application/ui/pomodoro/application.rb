@@ -56,9 +56,10 @@ module Pomodoro
       super()
 
       @pause = false
+      @stop_timer = false
 
-      entry = Gtk::Entry.new
-      entry.set_width_chars 100
+      @entry = Gtk::Entry.new
+      @entry.set_width_chars 100
       start_button = Gtk::Button.new :label => "Start"
       start_button.signal_connect "clicked" do 
         start_timer
@@ -70,24 +71,27 @@ module Pomodoro
       end
 
       end_button = Gtk::Button.new :label => "End"
+      end_button.signal_connect "clicked" do 
+        end_button_pushed
+      end
 
-      project_selector = Gtk::ComboBoxText.new
+      @project_selector = Gtk::ComboBoxText.new
       @counter = Gtk::Label.new '25:00'
 
-      project_selector.append_text 'Project 1'
-      project_selector.append_text 'Project 2'
+      @project_selector.append_text 'Project 1'
+      @project_selector.append_text 'Project 2'
 
-      list_store = Gtk::ListStore.new(String, String, String)
-      iter = list_store.append 
+      @list_store = Gtk::ListStore.new(String, String, String)
+      iter = @list_store.append 
       iter[0] = "My first task"
       iter[1] = "Pomodoro GTK"
       iter[2] = "25"
-      iter = list_store.append 
+      iter = @list_store.append 
       iter[0] = "sssss first task"
       iter[1] = "ccc Pomodoro GTK"
       iter[2] = "25"
 
-      work_done = Gtk::TreeView.new(list_store)
+      work_done = Gtk::TreeView.new(@list_store)
       renderer = Gtk::CellRendererText.new
 
       column = Gtk::TreeViewColumn.new("Task", renderer, :text => 0)
@@ -102,8 +106,8 @@ module Pomodoro
       column.resizable = true
       work_done.append_column(column)
       
-      attach entry, 0, 0, 1, 1
-      attach project_selector, 1, 0, 1, 1
+      attach @entry, 0, 0, 1, 1
+      attach @project_selector, 1, 0, 1, 1
       attach start_button, 2, 0, 1, 1
       attach @pause_button, 3, 0, 1, 1
       attach end_button, 4, 0, 1, 1
@@ -121,6 +125,10 @@ module Pomodoro
       end
     end
 
+    def end_button_pushed
+      task_done
+    end
+
     def start_timer
       @total_seconds = 25 * 60
       @timeout_id = GLib::Timeout.add_seconds(1) { update_counter }
@@ -132,19 +140,36 @@ module Pomodoro
 
     def update_counter
       #puts(@total_seconds.to_s)
-      if !@pause
-        if @total_seconds > 0
-          @total_seconds = @total_seconds - 1
-          minutes = 24 - (25 * 60 - @total_seconds) / 60
-          seconds = 59 - (25 * 60 - @total_seconds) % 60
-          @counter.set_label '%02d:%02d' % [minutes, seconds] 
-          @timeout_id = GLib::Timeout.add(1000000) { update_counter }
-          return true
-        else
-          return false
+      if !@stop_timer
+        if !@pause
+          if @total_seconds > 0
+            @total_seconds = @total_seconds - 1
+            minutes = 24 - (25 * 60 - @total_seconds) / 60
+            seconds = 59 - (25 * 60 - @total_seconds) % 60
+            @counter.set_label '%02d:%02d' % [minutes, seconds] 
+            @timeout_id = GLib::Timeout.add(1000000) { update_counter }
+            return true
+          else
+            task_done
+            return false
+          end
         end
+      else 
+        @stop_timer = false
       end
       return false
+    end
+
+    def task_done
+      iter = @list_store.append
+      iter[0] = @entry.text
+      iter[1] = @project_selector.active_text
+      iter[2] = @counter.text
+
+      @counter.text= "25:00"
+      @entry.text= ""
+
+      @stop_timer = true
     end
 
   end
