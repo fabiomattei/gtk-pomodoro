@@ -170,6 +170,18 @@ module Pomodoro
       @entry.text= ""
 
       @stop_timer = true
+
+      data_to_store = Array.new
+
+      @list_store.each do |_model, path, iter|
+        item_to_store = Hash.new
+        item_to_store[:text] = iter[0]
+        item_to_store[:project] = iter[1] || ''
+        item_to_store[:time] = iter[2] 
+        data_to_store << item_to_store
+      end
+
+      puts(data_to_store.to_json)      
     end
 
   end
