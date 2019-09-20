@@ -81,7 +81,7 @@ module Pomodoro
       @project_selector.append_text 'Project 1'
       @project_selector.append_text 'Project 2'
 
-      @list_store = Gtk::ListStore.new(String, String, String)
+      @list_store = Gtk::ListStore.new(String, String, String, String)
       #iter = @list_store.append 
       #iter[0] = "My first task"
       #iter[1] = "Pomodoro GTK"
@@ -103,6 +103,10 @@ module Pomodoro
       work_done.append_column(column)
 
       column = Gtk::TreeViewColumn.new("Time (Min)", renderer, :text => 2)
+      column.resizable = true
+      work_done.append_column(column)
+
+      column = Gtk::TreeViewColumn.new("Date", renderer, :text => 3)
       column.resizable = true
       work_done.append_column(column)
       
@@ -165,6 +169,7 @@ module Pomodoro
       iter[0] = @entry.text
       iter[1] = @project_selector.active_text
       iter[2] = @counter.text
+      iter[3] = Time.now.strftime("%d/%m/%Y")
 
       @counter.text= "25:00"
       @entry.text= ""
@@ -175,9 +180,10 @@ module Pomodoro
 
       @list_store.each do |_model, path, iter|
         item_to_store = Hash.new
-        item_to_store[:text] = iter[0]
+        item_to_store[:text] = iter[0] || ''
         item_to_store[:project] = iter[1] || ''
-        item_to_store[:time] = iter[2] 
+        item_to_store[:time] = iter[2]
+        item_to_store[:date] = iter[3] || ''
         data_to_store << item_to_store
       end
 

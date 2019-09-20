@@ -3,7 +3,7 @@ require 'json'
 
 module Todo
   class Item
-    PROPERTIES = [:id, :task, :project, :time, :filename, :creation_datetime].freeze
+    PROPERTIES = [:id, :task, :project, :time, :date, :filename, :creation_datetime].freeze
 
     attr_accessor *PROPERTIES
 
