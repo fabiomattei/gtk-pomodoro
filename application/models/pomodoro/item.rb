@@ -1,7 +1,8 @@
 require 'securerandom'
 require 'json'
 
-module Todo
+module Pomodoro
+  
   class Item
     PROPERTIES = [:id, :task, :project, :time, :date, :filename, :creation_datetime].freeze
 
