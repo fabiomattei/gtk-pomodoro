@@ -19,9 +19,9 @@ module Pomodoro
     end
 
     # It saves items to its `filename` location
-    def save!
-      File.open(@filename, 'w') do |file|
-        file.write self.to_json
+    def save! json_string
+      File.open( File.expand_path( @filename ), 'w') do |file|
+        file.write json_string
       end
     end
 

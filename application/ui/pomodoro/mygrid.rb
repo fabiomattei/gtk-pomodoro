@@ -128,18 +128,8 @@ module Pomodoro
       @entry.text= ""
       @stop_timer = true
 
-      data_to_store = Array.new
-
-      @list_store.each do |_model, path, iter|
-        item_to_store = Hash.new
-        item_to_store[:text] = iter[0] || ''
-        item_to_store[:project] = iter[1] || ''
-        item_to_store[:time] = iter[2]
-        item_to_store[:date] = iter[3] || ''
-        data_to_store << item_to_store
-      end
-
-      puts(data_to_store.to_json)      
+      save_data
+            
     end
 
     def load_data
@@ -155,6 +145,23 @@ module Pomodoro
         iter[3] = item.date
       end
 
+    end
+
+    def save_data
+      data_to_store = Array.new
+
+      @list_store.each do |_model, path, iter|
+        item_to_store = Hash.new
+        item_to_store[:text] = iter[0] || ''
+        item_to_store[:project] = iter[1] || ''
+        item_to_store[:time] = iter[2]
+        item_to_store[:date] = iter[3] || ''
+        data_to_store << item_to_store
+      end
+
+      items_list = ItemList.new @filename
+
+      items_list.save! data_to_store.to_json
     end
 
   end
