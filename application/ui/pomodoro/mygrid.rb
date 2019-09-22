@@ -7,6 +7,7 @@ module Pomodoro
 
       @pause = false
       @stop_timer = false
+      @filename = '~/.gtk-pomodoro/gtk-pomodoro-data.json'
 
       @entry = Gtk::Entry.new
       @entry.set_width_chars 100
@@ -67,6 +68,8 @@ module Pomodoro
       attach end_button, 4, 0, 1, 1
       attach @counter, 0, 1, 5, 1
       attach work_done, 0, 2, 5, 1
+
+      load_data
     end
 
     def pause_button_pushed
@@ -123,7 +126,6 @@ module Pomodoro
 
       @counter.text= "25:00"
       @entry.text= ""
-
       @stop_timer = true
 
       data_to_store = Array.new
@@ -138,6 +140,21 @@ module Pomodoro
       end
 
       puts(data_to_store.to_json)      
+    end
+
+    def load_data
+      items_list = ItemList.new @filename
+
+      items = items_list.data.map { |it| Item.new(it['text'], it['project'], it['time'], it['date']) }
+
+      items.each do |item|
+        iter = @list_store.append 
+        iter[0] = item.text
+        iter[1] = item.project
+        iter[2] = item.time
+        iter[3] = item.date
+      end
+
     end
 
   end
