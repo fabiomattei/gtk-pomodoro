@@ -2,6 +2,7 @@
 
 require 'gtk3'
 require 'json'
+require 'fileutils'
 
 # Require all ruby files in the application folder recursively
 application_root_path = File.expand_path(__dir__)
