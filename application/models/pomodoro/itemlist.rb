@@ -9,13 +9,11 @@ module Pomodoro
   		load_items_list
   	end
 
-	# It load items from its `filename` location
+	  # It loads items from its `filename` location
   	def load_items_list
-
   		file = File.open File.expand_path @filename
-		@data = JSON.load file
-		file.close
-
+		  @data = JSON.load file
+      file.close
     end
 
     # It saves items to its `filename` location
